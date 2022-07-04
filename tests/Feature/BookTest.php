@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
+use Tests\RequestFactories\BooksFactory;
 
-it('can get a list of books from the API', function ($responseData) {
+it('can get a list of books from the API', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -16,9 +19,11 @@ it('can get a list of books from the API', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 1', function ($responseData) {
+it('can get a list of books from the API 1', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -32,9 +37,11 @@ it('can get a list of books from the API 1', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 2', function ($responseData) {
+it('can get a list of books from the API 2', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -48,9 +55,11 @@ it('can get a list of books from the API 2', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 3', function ($responseData) {
+it('can get a list of books from the API 3', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -64,9 +73,11 @@ it('can get a list of books from the API 3', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 5', function ($responseData) {
+it('can get a list of books from the API 5', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -80,9 +91,11 @@ it('can get a list of books from the API 5', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 6', function ($responseData) {
+it('can get a list of books from the API 6', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -96,8 +109,10 @@ it('can get a list of books from the API 6', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
-it('can get a list of books from the API 7', function ($responseData) {
+});
+it('can get a list of books from the API 7', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -111,9 +126,11 @@ it('can get a list of books from the API 7', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 8', function ($responseData) {
+it('can get a list of books from the API 8', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -127,9 +144,11 @@ it('can get a list of books from the API 8', function ($responseData) {
     collect($books->json('data'))->each(function ($book) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
-it('can get a list of books from the API 9', function ($responseData) {
+it('can get a list of books from the API 9', function () {
+    $responseData = ['data' => [BooksFactory::new()->create(['author' => 'J R R Tolkien'])]];
+
     Http::fake([
         '*' => Http::response(
             body: $responseData
@@ -140,13 +159,13 @@ it('can get a list of books from the API 9', function ($responseData) {
 
     expect($books->json())->toEqual($responseData);
 
-    collect($books->json('data'))->each(function ($book) {
+    collect($books->json('data'))->each(function ($book) use ($responseData) {
         expect($book['author'])->toEqual('J R R Tolkien');
     });
-})->with('books-list');
+});
 
 it('can create a new book', function () {
-    $responseData = fixture('BooksApi/create-book');
+    $responseData = ['data' => BooksFactory::new()->create()];
 
     Http::fake([
         '*' => Http::response(
@@ -155,13 +174,10 @@ it('can create a new book', function () {
         ),
     ]);
 
-    $book = Http::post('https://books-api.com/books', [
-        'title' => 'Spock Must Die!',
-        'author' => 'James Blish',
-    ]);
+    $book = Http::post('https://books-api.com/books', $responseData);
 
     expect($book->json())->toEqual($responseData)
-        ->and($book->json('data'))->title->toEqual('Spock Must Die!');
+        ->and($book->json('data'))->title->toEqual($responseData['data']['title']);
 });
 
 it('can delete a book from the API', function () {
